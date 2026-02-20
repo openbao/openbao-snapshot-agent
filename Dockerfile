@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine
+FROM alpine
 
 ARG BAO_VERSION=2.5.0
 
