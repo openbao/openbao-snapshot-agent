@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Golang Setup
-        uses: actions/setup-go@v6.2.0
+        uses: actions/setup-go@v6.3.0
         with:
           go-version: stable
           check-latest: true
