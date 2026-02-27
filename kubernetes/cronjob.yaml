@@ -4,7 +4,7 @@ kind: CronJob
 metadata:
   labels:
     app.kubernetes.io/name: bao-snapshot
-    app.kubernetes.io/version: v0.1.0
+    app.kubernetes.io/version: v0.3.0
   name: bao-snapshot
 spec:
   schedule: 0 * * * *
@@ -12,13 +12,13 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: bao-snapshot
-        app.kubernetes.io/version: v0.1.0
+        app.kubernetes.io/version: v0.3.0
     spec:
       template:
         metadata:
           labels:
             app.kubernetes.io/name: bao-snapshot
-            app.kubernetes.io/version: v0.1.0
+            app.kubernetes.io/version: v0.3.0
         spec:
           restartPolicy: Never
           automountServiceAccountToken: true
@@ -26,38 +26,101 @@ spec:
           containers:
           - name: bao-snapshot
             env:
-            - name: S3_HOST
-              value: s3.example.com
-            - name: S3_BUCKET
-              value: bucket
-            - name: S3_URI
-              value: s3://bucket
-              # leave empty to retain snapshot files (default)
-            - name: S3_EXPIRE_DAYS
-              value:
-              # Leave empty to use system trust store, use "--ca-certs=" to specify the path to the CA or "--no-check-certificate" to skip TLS verification
-            - name: S3CMD_EXTRA_FLAG
-              value:
-              # Leave empty to use default '/var/run/secrets/kubernetes.io/serviceaccount/token'
+            # ---- OpenBao connection ----
+            # Leave empty to use default '/var/run/secrets/kubernetes.io/serviceaccount/token'
             - name: TOKEN_PATH
               value:
+            - name: BAO_ADDR
+              value: https://bao.example.com
             - name: BAO_AUTH_PATH
               value: kubernetes
             - name: BAO_ROLE
               value: bao-raft-snapshot
-            - name: BAO_ADDR
-              value: https://bao.examaple.com
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: aws_secret_access_key
-                  name: bao-snapshot-credentials
+
+            # ---- oli storage provider (required) ----
+            # Supported values: s3  |  gcs  |  azblob
+            - name: OLI_STORAGE_TYPE
+              value: s3
+            # Optional: oli profile name used in config.toml (default: bao)
+            - name: OLI_PROFILE
+              value:
+            # Optional: root path inside the bucket / container (default: /)
+            - name: OLI_ROOT
+              value:
+            # Leave empty to retain all snapshots; set to a positive integer to
+            # automatically delete snapshots older than N days
+            - name: OLI_EXPIRE_DAYS
+              value:
+
+            # ---- AWS S3 / S3-compatible  (OLI_STORAGE_TYPE=s3) ----
+            - name: OLI_BUCKET
+              value: my-backup-bucket
+            - name: OLI_REGION
+              value: us-east-1
+            # Optional: custom endpoint for S3-compatible storage (MinIO, etc.)
+            - name: OLI_ENDPOINT
+              value:
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   key: aws_access_key_id
                   name: bao-snapshot-credentials
-            image: ghcr.io/openbao/openbao-snapshot-agent:0.2.4
+                  optional: true
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: aws_secret_access_key
+                  name: bao-snapshot-credentials
+                  optional: true
+            # Optional: STS session token
+            - name: AWS_SESSION_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: aws_session_token
+                  name: bao-snapshot-credentials
+                  optional: true
+
+            # ---- Google Cloud Storage  (OLI_STORAGE_TYPE=gcs) ----
+            # OLI_BUCKET above is also used as the GCS bucket name.
+            # Option A – path to a service-account key file mounted into the pod:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value:  # e.g. /var/secrets/google/key.json
+            # Option B – base64-encoded service-account key JSON stored in a Secret:
+            - name: GCS_SERVICE_ACCOUNT_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: gcs_service_account_key
+                  name: bao-snapshot-credentials
+                  optional: true
+
+            # ---- Azure Blob Storage  (OLI_STORAGE_TYPE=azblob) ----
+            # Container name (azblob equivalent of OLI_BUCKET)
+            - name: OLI_CONTAINER
+              value:
+            # Optional: full endpoint URL (default: https://<account>.blob.core.windows.net)
+            - name: AZURE_STORAGE_ENDPOINT
+              value:
+            - name: AZURE_STORAGE_ACCOUNT_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: azure_storage_account_name
+                  name: bao-snapshot-credentials
+                  optional: true
+            # Use either AZURE_STORAGE_ACCOUNT_KEY or AZURE_STORAGE_SAS_TOKEN:
+            - name: AZURE_STORAGE_ACCOUNT_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: azure_storage_account_key
+                  name: bao-snapshot-credentials
+                  optional: true
+            - name: AZURE_STORAGE_SAS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: azure_storage_sas_token
+                  name: bao-snapshot-credentials
+                  optional: true
+
+            image: ghcr.io/openbao/openbao-snapshot-agent:0.3.0
             volumeMounts:
               - name: snapshot-dir
                 mountPath: /bao-snapshots
