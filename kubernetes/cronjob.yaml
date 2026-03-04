@@ -57,7 +57,7 @@ spec:
                 secretKeyRef:
                   key: aws_access_key_id
                   name: bao-snapshot-credentials
-            image: ghcr.io/openbao/openbao-snapshot-agent:0.2.4
+            image: ghcr.io/openbao/openbao-snapshot-agent:0.3.0
             volumeMounts:
               - name: snapshot-dir
                 mountPath: /bao-snapshots
