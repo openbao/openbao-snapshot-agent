@@ -154,6 +154,8 @@ Test the script (errors probably in `/var/spool/mail/root`):
 vault-snapshot
 ```
 
+For users with larger databases this might fail with `context deadline exceeded`, which can be solved by increasing the `VAULT_CLIENT_TIMEOUT` environment variable (default 60s) for the [agent service](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Environment).
+
 ## Sync with remote storage
 
 ### S3
