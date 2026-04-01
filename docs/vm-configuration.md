@@ -131,7 +131,7 @@ cat << 'EOF' > /usr/local/bin/bao-snapshot
 #  - /etc/bao.d/bao_snapshot_agent.hcl
 #  - /etc/systemd/system/bao-agent.service
 
-BAO_ADDR="BAO_ADDR=unix:///etc/bao.d/agent.sock" \
+BAO_ADDR="unix:///etc/bao.d/agent.sock" \
 /usr/local/bin/bao operator raft snapshot save "/opt/bao/snapshots/bao-raft_$(date +%F-%H%M).snapshot"
 EOF
 ```
