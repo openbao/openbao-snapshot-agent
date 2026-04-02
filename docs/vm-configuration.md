@@ -62,7 +62,7 @@ api_proxy {
 listener "unix" {
   # Expose OpenBao Agent API seperately
   # https://openbao.org/docs/agent-and-proxy/agent/caching/#configuration-listener
-  address = "/etc/vault.d/agent.sock"
+  address = "/etc/bao.d/agent.sock"
   tls_disable = true
 }
 
@@ -151,10 +151,10 @@ echo "0 * * * * root /usr/local/bin/bao-snapshot" >> /etc/crontab
 Test the script (errors probably in `/var/spool/mail/root`):
 
 ```bash
-vault-snapshot
+bao-snapshot
 ```
 
-For users with larger databases this might fail with `context deadline exceeded`, which can be solved by increasing the `VAULT_CLIENT_TIMEOUT` environment variable (default 60s) for the [agent service](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Environment).
+For users with larger databases this might fail with `context deadline exceeded`, which can be solved by increasing the `BAO_CLIENT_TIMEOUT` environment variable (default 60s) for the [agent service](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Environment).
 
 ## Sync with remote storage
 
