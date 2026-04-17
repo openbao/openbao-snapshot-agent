@@ -13,6 +13,7 @@ After the snapshot is created in a temporary directory, `s3cmd` is used to sync 
 * `BAO_ADDR`  - OpenBao address to access
 * `BAO_ROLE` - OpenBao role to use to create the snapshot
 * `BAO_AUTH_PATH` - The path of the Kubernetes authentication backend in Vault (e.g. `kubernetes`)
+* `BAO_SECRET_PATH` - Secret path to retrieve S3 credentials from. Expects the secret to have two fields: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 * `TOKEN_PATH` - The path of the Kubernetes service account token. If unset defaults to `/var/run/secrets/kubernetes.io/serviceaccount/token`.
 * `S3_URI` - S3 URI to use to upload (s3://xxx)
 * `S3_BUCKET` - S3 bucket to point to
