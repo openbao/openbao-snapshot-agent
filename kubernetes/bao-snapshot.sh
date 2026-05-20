@@ -7,15 +7,15 @@ JWT=$(cat "${TOKEN_PATH:=/var/run/secrets/kubernetes.io/serviceaccount/token}")
 export JWT
 
 echo "Using OpenBao auth path: $BAO_AUTH_PATH"
-BAO_TOKEN=$(bao write -field=token  "auth/$BAO_AUTH_PATH/login" role="${BAO_ROLE}" jwt="${JWT}")
+BAO_TOKEN=$(BAO_NAMESPACE=${BAO_AUTH_NAMESPACE:-} bao write -field=token  "auth/$BAO_AUTH_PATH/login" role="${BAO_ROLE}" jwt="${JWT}")
 export BAO_TOKEN
 
 if [ "${BAO_SECRET_PATH}" ]; then
     echo "Fetching S3 credentials from OpenBao: ${BAO_SECRET_PATH}"
-    AWS_ACCESS_KEY_ID=$(bao kv get -field AWS_ACCESS_KEY_ID "${BAO_SECRET_PATH}")
+    AWS_ACCESS_KEY_ID=$(BAO_NAMESPACE=${BAO_SECRET_NAMESPACE:-} bao kv get -field AWS_ACCESS_KEY_ID "${BAO_SECRET_PATH}")
     export AWS_ACCESS_KEY_ID
 
-    AWS_SECRET_ACCESS_KEY=$(bao kv get -field AWS_SECRET_ACCESS_KEY "${BAO_SECRET_PATH}")
+    AWS_SECRET_ACCESS_KEY=$(BAO_NAMESPACE=${BAO_SECRET_NAMESPACE:-} bao kv get -field AWS_SECRET_ACCESS_KEY "${BAO_SECRET_PATH}")
     export AWS_SECRET_ACCESS_KEY
 fi
 
