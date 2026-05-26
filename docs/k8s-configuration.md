@@ -82,7 +82,7 @@ bao write auth/jwt/role/bao-snapshot \
    ttl="1h"
 ```
 
-## Configure the environement variables
+## Configure the environment variables
 
 In `kubernetes/cronjob.yaml`, configure the environement variables according to your setup.
 
