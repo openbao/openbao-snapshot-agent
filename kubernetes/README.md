@@ -12,6 +12,7 @@ After the snapshot is created in a temporary directory, `s3cmd` is used to sync 
 
 * `BAO_ADDR`  - OpenBao address to access
 * `BAO_ROLE` - OpenBao role to use to create the snapshot
+* `BAO_NAMESPACE` - OpenBao namespace to be used. Leave empty for non-namespace installations.
 * `BAO_AUTH_PATH` - The path of the Kubernetes authentication backend in Vault (e.g. `kubernetes`)
 * `BAO_AUTH_NAMESPACE` - Namespace for bao authentication. If authentication namespace needs to be different to `BAO_NAMESPACE`.
 * `BAO_SECRET_PATH` - Secret path to retrieve S3 credentials from. Expects the secret to have two fields: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
