@@ -7,7 +7,7 @@ JWT=$(cat "${TOKEN_PATH:=/var/run/secrets/kubernetes.io/serviceaccount/token}")
 export JWT
 
 echo "Using OpenBao auth path: $BAO_AUTH_PATH"
-BAO_TOKEN=$(BAO_NAMESPACE=${BAO_AUTH_NAMESPACE:-${BAO_NAMESPACE:-}} bao write -field=token "auth/$BAO_AUTH_PATH/login" role="${BAO_ROLE}" jwt="${JWT}")
+BAO_TOKEN=$(BAO_NAMESPACE=${BAO_AUTH_NAMESPACE-${BAO_NAMESPACE:-}} bao write -field=token "auth/$BAO_AUTH_PATH/login" role="${BAO_ROLE}" jwt="${JWT}")
 export BAO_TOKEN
 
 if [ "${BAO_SECRET_PATH}" ]; then
