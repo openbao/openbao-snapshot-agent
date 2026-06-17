@@ -29,14 +29,14 @@ This is a very straightforward example and might not work for your infrastructur
 bao auth enable kubernetes
 ```
 
-1. Configure the Kubernetes authentication method:
+2. Configure the Kubernetes authentication method:
 
 ```bash
 bao write auth/kubernetes/config \
     kubernetes_host=https://192.168.99.100:<your TCP port or blank for 443>
 ```
 
-1. Create a role:
+3. Create a role:
 
 ```bash
 bao write auth/kubernetes/role/bao-snapshot \
@@ -56,13 +56,13 @@ This is a very straightforward example and might not work for your infrastructur
 bao auth enable jwt
 ```
 
-1. Fetch signing public keys from your Kubernetes cluster:
+2. Fetch signing public keys from your Kubernetes cluster:
 
 ```bash
 kubectl get --raw "$(kubectl get --raw /.well-known/openid-configuration | jq -r '.jwks_uri' | sed -r 's/.*\.[^/]+(.*)/\1/')"
 ```
 
-1. Configure the authentication method:
+3. Configure the authentication method:
 
 ```bash
 bao write auth/jwt/config \
@@ -71,14 +71,14 @@ MIIBIjANBgkqhkiG9...
 -----END PUBLIC KEY-----"
 ```
 
-1. Retrive the default audience claim of the Kubernetes cluster:
+4. Retrive the default audience claim of the Kubernetes cluster:
 
 ```bash
 kubectl create token default | cut -f2 -d. | base64 --decode
 {"aud":["https://kubernetes.default.svc.cluster.local"], ...}
 ```
 
-1. Create a role:
+5. Create a role:
 
 ```bash
 bao write auth/jwt/role/bao-snapshot \
