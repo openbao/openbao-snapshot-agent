@@ -105,7 +105,7 @@ kubectl create ns -n bao-snapshot
 
 Create the service account used for authentication:
 ```bash
-kubectl create sa -n bao-snapshot bao-snapshot
+kubectl apply -n bao-snapshot -f kubernetes/serviceaccount.yaml
 ```
 
 Deploy the Kubernetes cronjob:
