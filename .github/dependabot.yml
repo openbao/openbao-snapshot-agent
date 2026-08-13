@@ -4,11 +4,15 @@ updates:
     directory: "/kubernetes"
     schedule:
       interval: daily
+    cooldown:
+      default-days: 5
     open-pull-requests-limit: 10
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 5
     commit-message:
       prefix: "chore(ci): "
     open-pull-requests-limit: 10
