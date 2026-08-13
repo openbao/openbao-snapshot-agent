@@ -92,7 +92,7 @@ bao write auth/jwt/role/bao-snapshot \
 
 ## Configure the environment variables
 
-In `kubernetes/cronjob.yaml`, configure the environement variables according to your setup.
+In `kubernetes/cronjob.yaml`, configure the environment variables according to your setup.
 
 - `BAO_ADDR` - OpenBao address to access
 - `BAO_ROLE` - OpenBao role to use to create the snapshot
@@ -105,7 +105,7 @@ In `kubernetes/cronjob.yaml`, configure the environement variables according to 
 - `S3_BUCKET` - S3 bucket to point to
 - `S3_HOST` - S3 endpoint
 - `S3_EXPIRE_DAYS` - Delete files older than this threshold (expired)
-- `S3CMD_EXTRA_FLAG` - To specify additionnal [S3CMD flags](https://s3tools.org/usage)
+- `S3CMD_EXTRA_FLAG` - To specify additional [S3CMD flags](https://s3tools.org/usage)
 - `AWS_ACCESS_KEY_ID` - Access key to use to access S3
 - `AWS_SECRET_ACCESS_KEY` - Secret access key to use to access S3
 

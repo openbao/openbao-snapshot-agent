@@ -1,6 +1,6 @@
 # OpenBao Raft Backup Agent - Ansible Configuration
 
-This directory contains Ansible instructions to deploy the Raft Backup Agent. The tasks of the role `bao-raft-backup-agent` are derived from the [manual configurations for Bare Metal/VMs](../docs/vm-configuration.md)).
+This directory contains Ansible instructions to deploy the Raft Backup Agent. The tasks of the role `bao-raft-backup-agent` are derived from the [manual configurations for Bare Metal/VMs](../docs/vm-configuration.md).
 
 Note that the playbook will only save the snapshot to a configured directory. If you want to automatically sync those to an S3 bucket, it will need to be configured on top.
 
