@@ -21,7 +21,7 @@ After the snapshot is created in a temporary directory, `s3cmd` is used to sync 
 - `S3_BUCKET` - S3 bucket to point to
 - `S3_HOST` - S3 endpoint
 - `S3_EXPIRE_DAYS` - Delete files older than this threshold (expired)
-- `S3CMD_EXTRA_FLAG` - To specify additionnal [S3CMD flags](https://s3tools.org/usage)
+- `S3CMD_EXTRA_FLAG` - To specify additional [S3CMD flags](https://s3tools.org/usage)
 - `AWS_ACCESS_KEY_ID` - Access key to use to access S3
 - `AWS_SECRET_ACCESS_KEY` - Secret access key to use to access S3
 
