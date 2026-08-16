@@ -31,8 +31,8 @@ bao write -f auth/approle/role/bao-snap-agent/secret-id -format=json | jq -r .da
 On all OpenBao servers:
 
 ```bash
-echo "<role_id>" > /etc/bao.d/snap-secretid
-echo "<secretd_id>" > /etc/bao.d/snap-roleid
+echo "<role_id>" > /etc/bao.d/snap-roleid
+echo "<secret_id>" > /etc/bao.d/snap-secretid
 chmod 0640 /etc/bao.d/snap-{roleid,secretid}
 chown bao:bao /etc/bao.d/snap-{roleid,secretid}
 ```
@@ -60,7 +60,7 @@ api_proxy {
 }
 
 listener "unix" {
-  # Expose OpenBao Agent API seperately
+  # Expose OpenBao Agent API separately
   # https://openbao.org/docs/agent-and-proxy/agent/caching/#configuration-listener
   address = "/etc/bao.d/agent.sock"
   tls_disable = true
@@ -179,7 +179,7 @@ echo "/usr/bin/s3cmd sync /opt/bao/snapshots/* s3://raft-snapshots" >> /usr/loca
 
 For an retention of 7 days (locally, not on the remote storage) you need to add the following to the `bao-snapshot` script:
 
-```
+```bash
 find /opt/bao/snapshots/* -mtime +7 -exec rm {} \;
 ```
 
