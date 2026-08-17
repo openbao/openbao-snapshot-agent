@@ -5,10 +5,7 @@ ARG TARGETARCH
 
 COPY kubernetes/bao-snapshot.sh /
 
-RUN if [[ "$TARGETARCH" == "amd64" ]]; then \
-        TARGETARCH="x86_64"; \
-    fi && \
-    wget "https://github.com/openbao/openbao/releases/download/v${BAO_VERSION}/openbao_${BAO_VERSION}_linux_${TARGETARCH}.tar.gz" && \
+RUN wget "https://github.com/openbao/openbao/releases/download/v${BAO_VERSION}/openbao_${BAO_VERSION}_linux_${TARGETARCH}.tar.gz" && \
     wget "https://github.com/openbao/openbao/releases/download/v${BAO_VERSION}/checksums.txt" && \
     grep "openbao_${BAO_VERSION}_linux_${TARGETARCH}\.tar\.gz$" checksums.txt | sha256sum -c - && \
     tar xzf "openbao_${BAO_VERSION}_linux_${TARGETARCH}.tar.gz" && \
