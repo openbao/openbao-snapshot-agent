@@ -6,7 +6,7 @@ Currently, the container image only supports S3 as the final storage for the sna
 
 ## Configure Authentication
 
-On Kubernetes, you can choose between using [JWT Authentication](https://openbao.org/docs/auth/jwt/oidc-providers/kubernetes/) or [Kubernetes Authentication](https://openbao.org/docs/auth/kubernetes/). The instructions below provides a straighforward approach to configure both methods to use with the Kubernetes Cronjob.
+On Kubernetes, you can choose between using [JWT Authentication](https://openbao.org/docs/auth/jwt/oidc-providers/kubernetes/) or [Kubernetes Authentication](https://openbao.org/docs/auth/kubernetes/). The instructions below provides a straightforward approach to configure both methods to use with the Kubernetes Cronjob.
 
 ### OpenBao Policy
 
@@ -71,11 +71,11 @@ MIIBIjANBgkqhkiG9...
 -----END PUBLIC KEY-----"
 ```
 
-4. Retrive the default audience claim of the Kubernetes cluster:
+4. Retrieve the default audience claim of the Kubernetes cluster:
 
 ```bash
 kubectl create token default | cut -f2 -d. | base64 --decode
-{"aud":["https://kubernetes.default.svc.cluster.local"], ...}
+# {"aud":["https://kubernetes.default.svc.cluster.local"], ...}
 ```
 
 5. Create a role:
@@ -111,10 +111,10 @@ In `kubernetes/cronjob.yaml`, configure the environment variables according to y
 
 ## Deploy Kubernetes Cronjob
 
-Create the destination namespace :
+Create the destination namespace:
 
 ```bash
-kubectl create ns -n bao-snapshot
+kubectl create ns bao-snapshot
 ```
 
 Create the service account used for authentication:

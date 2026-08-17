@@ -20,6 +20,7 @@ Note that the **secretid is removed by default**. Set the variable `remove_secre
 ## Usage
 
 ### Role Usage / Playbook
+
 An example playbook is provided in the file [`playbook.yml`](./playbook.yml)
 
 ```bash
@@ -34,6 +35,7 @@ $ systemctl list-timers
 ```
 
 ## Limitations
+
 The Ansible role comes with the following limitations:
 
 * Does not configure a cron job, only a systemd timer/service pair
