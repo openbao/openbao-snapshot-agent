@@ -19,6 +19,17 @@ if [ "${BAO_SECRET_PATH}" ]; then
   export AWS_SECRET_ACCESS_KEY
 fi
 
+# Check AWS variables are not empty
+if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+  echo "error: variable AWS_ACCESS_KEY_ID is empty"
+  exit 1
+fi
+
+if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+  echo "error: variable AWS_SECRET_ACCESS_KEY is empty"
+  exit 1
+fi
+
 # Create snapshot
 bao operator raft snapshot save /bao-snapshots/bao_"$(date +%F-%H%M)".snapshot
 
