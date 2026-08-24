@@ -1,6 +1,9 @@
 #!/usr/bin/env sh
 
-set -e
+# "set -o pipefail" is valid since POSIX.1-2024 and shellcheck supports that
+# but there was not release yet https://github.com/koalaman/shellcheck/pull/3305
+# shellcheck disable=SC3040
+set -euf -o pipefail
 
 # Authenticate with OpenBao
 JWT=$(cat "${TOKEN_PATH:=/var/run/secrets/kubernetes.io/serviceaccount/token}")
