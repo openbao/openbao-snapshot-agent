@@ -37,7 +37,7 @@ fi
 bao operator raft snapshot save /bao-snapshots/bao_"$(date +%F-%H%M)".snapshot
 
 # Upload to S3
-find /bao-snapshots/ -type f | while read file; do s3cmd put "${file}" "${S3_URI}" --host="${S3_HOST}" --host-bucket="${S3_BUCKET}" ${S3CMD_EXTRA_FLAG:+$S3CMD_EXTRA_FLAG}; done
+find /bao-snapshots/ -type f | while read -r file; do s3cmd put "${file}" "${S3_URI}" --host="${S3_HOST}" --host-bucket="${S3_BUCKET}" ${S3CMD_EXTRA_FLAG:+$S3CMD_EXTRA_FLAG}; done
 
 # Remove expired snapshots
 if [ "${S3_EXPIRE_DAYS:-}" ]; then
