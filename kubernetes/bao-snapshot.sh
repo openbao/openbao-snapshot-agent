@@ -23,7 +23,7 @@ if [ "${BAO_SECRET_PATH:-}" ]; then
 fi
 
 # Only check AWS variables when IRSA is not being used
-if [ -z "${AWS_ROLE_ARN:-}" || -z "${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]; then
+if [ -z "${AWS_ROLE_ARN:-}" ] || [ -z "${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]; then
   # Check AWS variables are not empty
   if [ -z "${AWS_ACCESS_KEY_ID:-}" ]; then
     echo "error: variable AWS_ACCESS_KEY_ID is empty"
