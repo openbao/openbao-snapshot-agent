@@ -13,7 +13,7 @@ echo "Using OpenBao auth path: $BAO_AUTH_PATH"
 BAO_TOKEN=$(BAO_NAMESPACE=${BAO_AUTH_NAMESPACE-${BAO_NAMESPACE:-}} bao write -field=token "auth/$BAO_AUTH_PATH/login" role="${BAO_ROLE}" jwt="${JWT}")
 export BAO_TOKEN
 
-if [ "${BAO_SECRET_PATH}" ]; then
+if [ "${BAO_SECRET_PATH:-}" ]; then
   echo "Fetching S3 credentials from OpenBao: ${BAO_SECRET_PATH}"
   AWS_ACCESS_KEY_ID=$(bao kv get -field AWS_ACCESS_KEY_ID "${BAO_SECRET_PATH}")
   export AWS_ACCESS_KEY_ID
@@ -23,12 +23,12 @@ if [ "${BAO_SECRET_PATH}" ]; then
 fi
 
 # Check AWS variables are not empty
-if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+if [ -z "${AWS_ACCESS_KEY_ID:-}" ]; then
   echo "error: variable AWS_ACCESS_KEY_ID is empty"
   exit 1
 fi
 
-if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+if [ -z "${AWS_SECRET_ACCESS_KEY:-}" ]; then
   echo "error: variable AWS_SECRET_ACCESS_KEY is empty"
   exit 1
 fi
@@ -40,7 +40,7 @@ bao operator raft snapshot save /bao-snapshots/bao_"$(date +%F-%H%M)".snapshot
 s3cmd put /bao-snapshots/* "${S3_URI}" --host="${S3_HOST}" --host-bucket="${S3_BUCKET}" ${S3CMD_EXTRA_FLAG:+$S3CMD_EXTRA_FLAG}
 
 # Remove expired snapshots
-if [ "${S3_EXPIRE_DAYS}" ]; then
+if [ "${S3_EXPIRE_DAYS:-}" ]; then
   s3cmd ls "${S3_URI}" --host="${S3_HOST}" --host-bucket="${S3_BUCKET}" ${S3CMD_EXTRA_FLAG:+$S3CMD_EXTRA_FLAG} | while read -r line; do
     createDate=$(echo "$line" | awk '{print $1" "$2}')
     createDate=$(date -d"$createDate" +%s)
