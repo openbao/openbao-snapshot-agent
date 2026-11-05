@@ -71,8 +71,19 @@ remove_secret_id_file_after_reading: yes
 
 # Snapshot output directory
 bao_snapshot_dir: '/opt/bao/snapshots'
-# Snapshot file name format
-bao_snapshot_file_name: 'bao-raft_$(date +%%F-%%H%%M).snapshot'
+# Snapshot file name: <prefix>[_v<version>][_<suffix>]_<date>.snapshot
+# Prefix and suffix may only contain letters, digits, '.', '_' and '-'
+# Snapshot file name prefix
+bao_snapshot_file_prefix: 'bao-raft'
+# Custom string added before the date, e.g. 'prod'; empty for none
+bao_snapshot_file_suffix: ''
+# Add the OpenBao server version (e.g. v2.6.2) to the snapshot file name
+bao_snapshot_include_version: yes
+
+# Script that takes the snapshot, executed by the timer service
+bao_snapshot_script_path: '/usr/local/bin/bao-snapshot'
+# Snapshot script template
+bao_snapshot_script_template: 'templates/usr/local/bin/bao-snapshot.j2'
 
 # Snapshot retention find time filter,
 # one of 'mtime' or 'atime', see `man find`

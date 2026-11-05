@@ -131,10 +131,34 @@ cat << 'EOF' > /usr/local/bin/bao-snapshot
 #  - /etc/bao.d/bao_snapshot_agent.hcl
 #  - /etc/systemd/system/bao-agent.service
 
-BAO_ADDR="unix:///etc/bao.d/agent.sock" \
-/usr/local/bin/bao operator raft snapshot save "/opt/bao/snapshots/bao-raft_$(date +%F-%H%M).snapshot"
+set -eu
+
+export BAO_ADDR="unix:///etc/bao.d/agent.sock"
+
+# Snapshot file name: <prefix>[_v<version>][_<suffix>]_<date>.snapshot
+# Prefix and suffix may only contain letters, digits, '.', '_' and '-'
+SNAPSHOT_PREFIX="bao-raft"
+SNAPSHOT_SUFFIX=""            # e.g. "prod"; leave empty for none
+SNAPSHOT_INCLUDE_VERSION=true  # set to false to leave out the OpenBao server version
+
+snapshot_name="${SNAPSHOT_PREFIX}"
+if [ "${SNAPSHOT_INCLUDE_VERSION}" = "true" ]; then
+  bao_server_version=$(/usr/local/bin/bao status -format=json | sed -n 's/^ *"version": *"\([^"]*\)".*/\1/p')
+  if [ -z "${bao_server_version}" ]; then
+    echo "error: could not determine the OpenBao server version" >&2
+    exit 1
+  fi
+  snapshot_name="${snapshot_name}_v${bao_server_version}"
+fi
+if [ "${SNAPSHOT_SUFFIX}" ]; then
+  snapshot_name="${snapshot_name}_${SNAPSHOT_SUFFIX}"
+fi
+
+/usr/local/bin/bao operator raft snapshot save "/opt/bao/snapshots/${snapshot_name}_$(date +%F-%H%M).snapshot"
 EOF
 ```
+
+By default snapshots are named e.g. `bao-raft_v2.6.2_2026-10-19-1400.snapshot`, or `bao-raft_v2.6.2_prod_2026-10-19-1400.snapshot` with `SNAPSHOT_SUFFIX="prod"`.
 
 Make the script executable:
 

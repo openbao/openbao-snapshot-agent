@@ -35,6 +35,16 @@ spec:
               # leave empty to retain snapshot files (default)
             - name: S3_EXPIRE_DAYS
               value:
+              # Snapshot file name: <prefix>[_v<version>][_<suffix>]_<date>.snapshot
+              # Leave empty to use the default prefix 'bao'
+            - name: SNAPSHOT_PREFIX
+              value:
+              # Leave empty for no suffix, e.g. "prod" or "eu-west-1"
+            - name: SNAPSHOT_SUFFIX
+              value:
+              # Set to "false" to leave out the OpenBao server version (e.g. v2.6.2)
+            - name: SNAPSHOT_INCLUDE_VERSION
+              value: "true"
               # Leave empty to use system trust store, use "--ca-certs=" to specify the path to the CA or "--no-check-certificate" to skip TLS verification
             - name: S3CMD_EXTRA_FLAG
               value:

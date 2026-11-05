@@ -106,8 +106,23 @@ In `kubernetes/cronjob.yaml`, configure the environment variables according to y
 - `S3_HOST` - S3 endpoint
 - `S3_EXPIRE_DAYS` - Delete files older than this threshold (expired)
 - `S3CMD_EXTRA_FLAG` - To specify additional [S3CMD flags](https://s3tools.org/usage)
+- `SNAPSHOT_PREFIX` - Prefix of the snapshot file name. Defaults to `bao`.
+- `SNAPSHOT_SUFFIX` - Custom string added to the snapshot file name before the date (e.g. `prod`). Empty by default.
+- `SNAPSHOT_INCLUDE_VERSION` - Adds the OpenBao server version to the snapshot file name. Set to `false` to leave it out. Defaults to `true`.
 - `AWS_ACCESS_KEY_ID` - Access key to use to access S3
 - `AWS_SECRET_ACCESS_KEY` - Secret access key to use to access S3
+
+### Snapshot file name
+
+Snapshots are named `<prefix>[_v<version>][_<suffix>]_<date>.snapshot`. With the defaults the name includes the OpenBao server version (`bao_v2.6.2_2026-10-19-1400.snapshot`). For example, with `SNAPSHOT_SUFFIX=prod`:
+
+```
+bao_v2.6.2_prod_2026-10-19-1400.snapshot
+```
+
+Set `SNAPSHOT_INCLUDE_VERSION=false` to leave out the version (`bao_prod_2026-10-19-1400.snapshot`).
+
+`SNAPSHOT_PREFIX` and `SNAPSHOT_SUFFIX` may only contain letters, digits, `.`, `_` and `-`.
 
 ## Deploy Kubernetes Cronjob
 

@@ -22,6 +22,9 @@ After the snapshot is created in a temporary directory, `s3cmd` is used to sync 
 - `S3_HOST` - S3 endpoint
 - `S3_EXPIRE_DAYS` - Delete files older than this threshold (expired)
 - `S3CMD_EXTRA_FLAG` - To specify additional [S3CMD flags](https://s3tools.org/usage)
+- `SNAPSHOT_PREFIX` - Prefix of the snapshot file name. Defaults to `bao`.
+- `SNAPSHOT_SUFFIX` - Custom string added to the snapshot file name before the date (e.g. `prod`). Empty by default.
+- `SNAPSHOT_INCLUDE_VERSION` - Adds the OpenBao server version to the snapshot file name. Set to `false` to leave it out. Defaults to `true`.
 - `AWS_ACCESS_KEY_ID` - Access key to use to access S3
 - `AWS_SECRET_ACCESS_KEY` - Secret access key to use to access S3
 

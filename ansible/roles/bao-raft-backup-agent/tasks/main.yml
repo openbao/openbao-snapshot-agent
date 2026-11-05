@@ -1,5 +1,12 @@
 ---
 
+- name: validate snapshot file name
+  assert:
+    that:
+      - bao_snapshot_file_prefix is match('^[A-Za-z0-9._-]+$')
+      - bao_snapshot_file_suffix is match('^[A-Za-z0-9._-]*$')
+    fail_msg: "bao_snapshot_file_prefix (required) and bao_snapshot_file_suffix may only contain letters, digits, '.', '_' and '-'"
+
 - name: Add bao group
   become: true
   group:
@@ -68,6 +75,15 @@
     state: started
 
 # Timer systemd config
+- name: write snapshot script
+  become: true
+  template:
+    src: '{{ bao_snapshot_script_template }}'
+    dest: '{{ bao_snapshot_script_path }}'
+    mode: '0755'
+    owner: root
+    group: root
+
 - name: create systemd timer service file for snapshot service
   become: true
   template:

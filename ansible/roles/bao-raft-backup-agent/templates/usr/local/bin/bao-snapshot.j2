@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Take OpenBao Raft integrated storage snapshots through the OpenBao agent
+# See also:
+#  - {{ bao_snapshot_agent_config_file }}
+#  - {{ bao_snapshot_systemd_dir }}/{{ bao_snapshot_systemd_timer_service_name }}
+
+set -eu
+
+# Snapshot file name: <prefix>[_v<version>][_<suffix>]_<date>.snapshot
+snapshot_name="{{ bao_snapshot_file_prefix }}"
+{% if bao_snapshot_include_version | bool %}
+
+bao_server_version=$({{ bao_bin_path }}/bao status -format=json | sed -n 's/^ *"version": *"\([^"]*\)".*/\1/p')
+if [ -z "${bao_server_version}" ]; then
+  echo "error: could not determine the OpenBao server version" >&2
+  exit 1
+fi
+snapshot_name="${snapshot_name}_v${bao_server_version}"
+{% endif %}
+{% if bao_snapshot_file_suffix %}
+snapshot_name="${snapshot_name}_{{ bao_snapshot_file_suffix }}"
+{% endif %}
+
+{{ bao_bin_path }}/bao operator raft snapshot save "{{ bao_snapshot_dir }}/${snapshot_name}_$(date +%F-%H%M).snapshot"

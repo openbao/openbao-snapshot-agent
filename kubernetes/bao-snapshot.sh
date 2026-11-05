@@ -36,8 +36,31 @@ if [ -z "${AWS_ROLE_ARN:-}" ] || [ -z "${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]; then
   fi
 fi
 
+# Build snapshot file name: <prefix>[_v<version>][_<suffix>]_<date>.snapshot
+case "${SNAPSHOT_PREFIX:-}${SNAPSHOT_SUFFIX:-}" in
+  *[!A-Za-z0-9._-]*)
+    echo "error: SNAPSHOT_PREFIX and SNAPSHOT_SUFFIX may only contain letters, digits, '.', '_' and '-'"
+    exit 1
+    ;;
+esac
+
+SNAPSHOT_NAME="${SNAPSHOT_PREFIX:-bao}"
+
+if [ "${SNAPSHOT_INCLUDE_VERSION:-true}" = "true" ]; then
+  BAO_SERVER_VERSION=$(bao status -format=json | sed -n 's/^ *"version": *"\([^"]*\)".*/\1/p')
+  if [ -z "${BAO_SERVER_VERSION}" ]; then
+    echo "error: could not determine the OpenBao server version"
+    exit 1
+  fi
+  SNAPSHOT_NAME="${SNAPSHOT_NAME}_v${BAO_SERVER_VERSION}"
+fi
+
+if [ "${SNAPSHOT_SUFFIX:-}" ]; then
+  SNAPSHOT_NAME="${SNAPSHOT_NAME}_${SNAPSHOT_SUFFIX}"
+fi
+
 # Create snapshot
-bao operator raft snapshot save /bao-snapshots/bao_"$(date +%F-%H%M)".snapshot
+bao operator raft snapshot save /bao-snapshots/"${SNAPSHOT_NAME}_$(date +%F-%H%M)".snapshot
 
 # Upload to S3
 s3cmd put --recursive /bao-snapshots/ "${S3_URI}" --host="${S3_HOST}" --host-bucket="${S3_BUCKET}" ${S3CMD_EXTRA_FLAG:+$S3CMD_EXTRA_FLAG}
