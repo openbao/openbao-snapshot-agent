@@ -1,17 +1,10 @@
-FROM alpine:3.24.1@sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 
-ARG BAO_VERSION=2.6.2
-ARG TARGETARCH
+COPY --from=openbao/openbao:2.7.3@sha256:ba4b133eb9586630024e71a617e66f37f29cc3534cdd46a6233e098ceded8dc9 /usr/bin/bao /usr/local/bin 
 
 COPY kubernetes/bao-snapshot.sh /
 
-RUN wget "https://github.com/openbao/openbao/releases/download/v${BAO_VERSION}/openbao_${BAO_VERSION}_linux_${TARGETARCH}.tar.gz" && \
-    wget "https://github.com/openbao/openbao/releases/download/v${BAO_VERSION}/checksums.txt" && \
-    grep "openbao_${BAO_VERSION}_linux_${TARGETARCH}\.tar\.gz$" checksums.txt | sha256sum -c - && \
-    tar xzf "openbao_${BAO_VERSION}_linux_${TARGETARCH}.tar.gz" && \
-    mv bao /usr/local/bin && \
-    rm "openbao_${BAO_VERSION}_linux_${TARGETARCH}.tar.gz" checksums.txt && \
-    apk add --no-cache s3cmd && \
+RUN apk add --no-cache s3cmd && \
     chmod +x bao-snapshot.sh
 
 CMD ["/bao-snapshot.sh"]
